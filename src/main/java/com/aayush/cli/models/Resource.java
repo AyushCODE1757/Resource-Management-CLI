@@ -3,7 +3,7 @@ package com.aayush.cli.models;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Resource {
+public abstract class Resource {
     private String id;
     private String name;
     private ResourceType type;

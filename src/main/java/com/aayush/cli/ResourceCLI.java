@@ -82,10 +82,16 @@ public class ResourceCLI {
         if (allocatedTo.isBlank())
             allocatedTo = null;
 
-        Resource r = new Resource(
-                UUID.randomUUID().toString().substring(0, 8),
-                name, type, alloc, status, allocatedTo, LocalDate.now(), LocalDate.now());
-
+        Resource r;
+        if (type == ResourceType.CHAIR || type == ResourceType.DESK){
+            System.out.println("Enter the Location: ");
+            String location = scanner.nextLine();
+            r = new FurnitureResource(UUID.randomUUID().toString().substring(0, 8), name, type, alloc, status, allocatedTo, LocalDate.now(), LocalDate.now(), location);
+        } else{
+            System.out.println("Enter the License key: ");
+            String licenseKey = scanner.nextLine();
+            r = new DigitalResource(UUID.randomUUID().toString().substring(0, 8), name, type, alloc, status, allocatedTo, LocalDate.now(), LocalDate.now(), licenseKey);
+        }
         service.addResource(r);
         System.out.println("Resource added successfully!");
     }
