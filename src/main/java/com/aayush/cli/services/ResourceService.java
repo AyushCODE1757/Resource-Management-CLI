@@ -3,6 +3,8 @@ package com.aayush.cli.services;
 import com.aayush.cli.exceptions.ResourceNotFoundException;
 import com.aayush.cli.models.Resource;
 import com.aayush.cli.storage.ResourceStore;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,7 +14,7 @@ public class ResourceService implements IResourceService {
     private List<Resource> resources;
 
     public ResourceService() {
-        this.store = new ResourceStore();
+        this.store = ResourceStore.getInstance();
         this.resources = store.loadResources();
     }
 
@@ -52,5 +54,14 @@ public class ResourceService implements IResourceService {
 
     public Optional<Resource> getResourceById(String id) {
         return resources.stream().filter(r -> r.getId().equals(id)).findFirst();
+    }
+    public List<Resource> getSortedResources(String field) {
+        Comparator<Resource> comparator = switch (field) {
+            case "name" -> Comparator.comparing(Resource::getName);
+            case "type" -> Comparator.comparing(r -> r.getType().name());
+            case "status" -> Comparator.comparing(r -> r.getStatus().name());
+            default -> Comparator.comparing(Resource::getId);
+        };
+        return resources.stream().sorted(comparator).collect(Collectors.toList());
     }
 }

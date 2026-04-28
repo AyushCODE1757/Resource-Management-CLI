@@ -3,7 +3,7 @@ package com.aayush.cli.models;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public abstract class Resource {
+public abstract class Resource implements Comparable<Resource>{
     private String id;
     private String name;
     private ResourceType type;
@@ -109,5 +109,10 @@ public abstract class Resource {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(Resource other) {
+        return this.name.compareTo(other.name);
     }
 }

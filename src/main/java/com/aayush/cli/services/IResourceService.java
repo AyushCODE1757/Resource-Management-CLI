@@ -12,4 +12,5 @@ public interface IResourceService {
     void deleteResource(String id);
     Optional<Resource> getResourceById(String id);
     List<Resource> searchResources(String query);
+    List<Resource> getSortedResources(String field);
 }

@@ -8,7 +8,14 @@ import java.util.List;
 
 public class ResourceStore {
     private static final String FILE_PATH = "resources.txt";
-
+    private static ResourceStore instance;
+    private ResourceStore(){}
+    public static ResourceStore getInstance() {  // add this
+        if (instance == null) {
+            instance = new ResourceStore();
+        }
+        return instance;
+    }
     public void saveResources(List<Resource> resources) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH))) {
             for (Resource r : resources) {

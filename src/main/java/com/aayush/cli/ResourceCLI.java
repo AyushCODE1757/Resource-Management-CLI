@@ -28,6 +28,7 @@ public class ResourceCLI {
                 case "3" -> updateResource();
                 case "4" -> deleteResource();
                 case "5" -> searchResources();
+                case "6" -> sortResources();
                 case "0" -> {
                     running = false;
                     System.out.println("Exiting... Goodbye!");
@@ -44,6 +45,7 @@ public class ResourceCLI {
         System.out.println("3. Update Resource");
         System.out.println("4. Delete Resource");
         System.out.println("5. Search Resources");
+        System.out.println("6. Sort Resources");
         System.out.println("0. Exit");
         System.out.print("Enter choice: ");
     }
@@ -149,5 +151,12 @@ public class ResourceCLI {
             printHeader();
             results.forEach(System.out::println);
         }
+    }
+    private static void sortResources() {
+        System.out.println("\nSort by (name / type / status): ");
+        String field = scanner.nextLine().toLowerCase();
+        List<Resource> sorted = service.getSortedResources(field);
+        printHeader();
+        sorted.forEach(System.out::println);
     }
 }
