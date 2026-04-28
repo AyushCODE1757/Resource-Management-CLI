@@ -7,5 +7,14 @@ public enum ResourceType {
     MOUSE,
     CHAIR,
     DESK,
-    OTHER
+    OTHER;
+    private  String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }
