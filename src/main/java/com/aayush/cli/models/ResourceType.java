@@ -1,20 +1,14 @@
 package com.aayush.cli.models;
 
 public enum ResourceType {
-    LAPTOP,
-    MONITOR,
-    KEYBOARD,
-    MOUSE,
-    CHAIR,
-    DESK,
-    OTHER;
-    private  String category;
+    LAPTOP("Electronics"), MONITOR("Electronics"),
+    KEYBOARD("Electronics"), MOUSE("Electronics"),
+    CHAIR("Furniture"), DESK("Furniture"),
+    OTHER("Miscellaneous");
 
-    public String getCategory() {
-        return category;
-    }
+    private final String category;
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
+    ResourceType(String category) { this.category = category; }
+
+    public String getCategory() { return category; }
 }

@@ -57,15 +57,26 @@ public class ResourceStore {
 
     private Resource deserialize(String line) {
         String[] parts = line.split("\\|");
-        Resource r = new Resource();
-        r.setId(parts[0]);
-        r.setName(parts[1]);
-        r.setType(ResourceType.valueOf(parts[2]));
-        r.setAllocationType(AllocationType.valueOf(parts[3]));
-        r.setStatus(ResourceStatus.valueOf(parts[4]));
-        r.setAllocatedTo(parts[5].equals("NULL") ? null : parts[5]);
-        r.setLastMaintenance(parts[6].equals("NULL") ? null : LocalDate.parse(parts[6]));
-        r.setPurchaseDate(parts[7].equals("NULL") ? null : LocalDate.parse(parts[7]));
+        ResourceType type = ResourceType.valueOf(parts[2]);
+
+        Resource r;
+        if (type == ResourceType.CHAIR || type == ResourceType.DESK) {
+            r = new FurnitureResource(parts[0], parts[1], type,
+                    AllocationType.valueOf(parts[3]),
+                    ResourceStatus.valueOf(parts[4]),
+                    parts[5].equals("NULL") ? null : parts[5],
+                    parts[6].equals("NULL") ? null : LocalDate.parse(parts[6]),
+                    parts[7].equals("NULL") ? null : LocalDate.parse(parts[7]),
+                    "Unknown");
+        } else {
+            r = new DigitalResource(parts[0], parts[1], type,
+                    AllocationType.valueOf(parts[3]),
+                    ResourceStatus.valueOf(parts[4]),
+                    parts[5].equals("NULL") ? null : parts[5],
+                    parts[6].equals("NULL") ? null : LocalDate.parse(parts[6]),
+                    parts[7].equals("NULL") ? null : LocalDate.parse(parts[7]),
+                    "Unknown");
+        }
         return r;
     }
 }

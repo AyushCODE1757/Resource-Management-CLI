@@ -42,6 +42,7 @@ public class ResourceService implements IResourceService {
                 resources.set(i, updated);
                 resourceMap.put(id, updated);
                 store.saveResources(resources);
+                return ;
             }
         }
         throw new ResourceNotFoundException(id);
@@ -52,6 +53,7 @@ public class ResourceService implements IResourceService {
         if (removed) {
             store.saveResources(resources);
             resourceMap.remove(id);
+            return ;
         }
         throw new ResourceNotFoundException(id);
     }
