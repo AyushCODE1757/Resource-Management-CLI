@@ -1,5 +1,6 @@
 package com.aayush.cli;
 
+import com.aayush.cli.exceptions.ResourceNotFoundException;
 import com.aayush.cli.models.*;
 import com.aayush.cli.services.IResourceService;
 import com.aayush.cli.services.ResourceService;
@@ -99,34 +100,42 @@ public class ResourceCLI {
     private static void updateResource() {
         System.out.print("\nEnter ID of resource to update: ");
         String id = scanner.nextLine();
-        service.getResourceById(id).ifPresentOrElse(r -> {
-            System.out.print("New Name (current: " + r.getName() + ", leave blank to keep): ");
-            String name = scanner.nextLine();
-            if (!name.isBlank())
-                r.setName(name);
+        try {
+            service.getResourceById(id).ifPresentOrElse(r -> {
+                System.out.print("New Name (current: " + r.getName() + ", leave blank to keep): ");
+                String name = scanner.nextLine();
+                if (!name.isBlank())
+                    r.setName(name);
 
-            System.out.print("New Status (current: " + r.getStatus() + ", leave blank to keep): ");
-            String statusStr = scanner.nextLine();
-            if (!statusStr.isBlank())
-                r.setStatus(ResourceStatus.valueOf(statusStr.toUpperCase()));
+                System.out.print("New Status (current: " + r.getStatus() + ", leave blank to keep): ");
+                String statusStr = scanner.nextLine();
+                if (!statusStr.isBlank())
+                    r.setStatus(ResourceStatus.valueOf(statusStr.toUpperCase()));
 
-            System.out.print("New Allocated To (current: " + r.getAllocatedTo() + ", leave blank to keep): ");
-            String allocatedTo = scanner.nextLine();
-            if (!allocatedTo.isBlank())
-                r.setAllocatedTo(allocatedTo);
+                System.out.print("New Allocated To (current: " + r.getAllocatedTo() + ", leave blank to keep): ");
+                String allocatedTo = scanner.nextLine();
+                if (!allocatedTo.isBlank())
+                    r.setAllocatedTo(allocatedTo);
 
-            service.updateResource(id, r);
-            System.out.println("Resource updated successfully!");
-        }, () -> System.out.println("Resource not found."));
+                service.updateResource(id, r);
+                System.out.println("Resource updated successfully!");
+            }, () -> {
+                throw new ResourceNotFoundException(id);
+            });
+        }
+        catch (ResourceNotFoundException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private static void deleteResource() {
         System.out.print("\nEnter ID of resource to delete: ");
         String id = scanner.nextLine();
-        if (service.deleteResource(id)) {
+        try {
+            service.deleteResource(id);
             System.out.println("Resource deleted successfully.");
-        } else {
-            System.out.println("Resource not found.");
+        } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 

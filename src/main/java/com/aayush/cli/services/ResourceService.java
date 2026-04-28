@@ -1,5 +1,6 @@
 package com.aayush.cli.services;
 
+import com.aayush.cli.exceptions.ResourceNotFoundException;
 import com.aayush.cli.models.Resource;
 import com.aayush.cli.storage.ResourceStore;
 import java.util.List;
@@ -31,23 +32,22 @@ public class ResourceService implements IResourceService {
         store.saveResources(resources);
     }
 
-    public boolean updateResource(String id, Resource updated) {
+    public void updateResource(String id, Resource updated) {
         for (int i = 0; i < resources.size(); i++) {
             if (resources.get(i).getId().equals(id)) {
                 resources.set(i, updated);
                 store.saveResources(resources);
-                return true;
             }
         }
-        return false;
+        throw new ResourceNotFoundException(id);
     }
 
-    public boolean deleteResource(String id) {
+    public void deleteResource(String id) {
         boolean removed = resources.removeIf(r -> r.getId().equals(id));
         if (removed) {
             store.saveResources(resources);
         }
-        return removed;
+        throw new ResourceNotFoundException(id);
     }
 
     public Optional<Resource> getResourceById(String id) {

@@ -8,8 +8,8 @@ import java.util.Optional;
 public interface IResourceService {
     List<Resource> getAllResources();
     void addResource(Resource resource);
-    boolean updateResource(String id, Resource updated);
-    boolean deleteResource(String id);
+    void updateResource(String id, Resource updated);
+    void deleteResource(String id);
     Optional<Resource> getResourceById(String id);
     List<Resource> searchResources(String query);
 }
