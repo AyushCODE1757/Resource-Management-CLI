@@ -4,18 +4,19 @@ import com.aayush.cli.exceptions.ResourceNotFoundException;
 import com.aayush.cli.models.Resource;
 import com.aayush.cli.storage.ResourceStore;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ResourceService implements IResourceService {
     private final ResourceStore store;
     private List<Resource> resources;
-
+    private final Map<String, Resource> resourceMap = new HashMap<>();
     public ResourceService() {
         this.store = ResourceStore.getInstance();
         this.resources = store.loadResources();
+        for (Resource r : resources) {
+            resourceMap.put(r.getId(), r);
+        }
     }
 
     public List<Resource> getAllResources() {
@@ -31,6 +32,7 @@ public class ResourceService implements IResourceService {
 
     public void addResource(Resource resource) {
         resources.add(resource);
+        resourceMap.put(resource.getId(), resource);
         store.saveResources(resources);
     }
 
@@ -38,6 +40,7 @@ public class ResourceService implements IResourceService {
         for (int i = 0; i < resources.size(); i++) {
             if (resources.get(i).getId().equals(id)) {
                 resources.set(i, updated);
+                resourceMap.put(id, updated);
                 store.saveResources(resources);
             }
         }
@@ -48,12 +51,13 @@ public class ResourceService implements IResourceService {
         boolean removed = resources.removeIf(r -> r.getId().equals(id));
         if (removed) {
             store.saveResources(resources);
+            resourceMap.remove(id);
         }
         throw new ResourceNotFoundException(id);
     }
 
     public Optional<Resource> getResourceById(String id) {
-        return resources.stream().filter(r -> r.getId().equals(id)).findFirst();
+        return Optional.ofNullable(resourceMap.get(id));
     }
     public List<Resource> getSortedResources(String field) {
         Comparator<Resource> comparator = switch (field) {
