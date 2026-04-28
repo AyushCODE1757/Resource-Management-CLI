@@ -1,6 +1,7 @@
 package com.aayush.cli.models;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Resource {
     private String id;
@@ -96,5 +97,17 @@ public class Resource {
     public String toString() {
         return String.format("%-10s | %-20s | %-12s | %-10s | %-15s | %-15s",
                 id, name, type, status, allocatedTo != null ? allocatedTo : "N/A", allocationType);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Resource resource = (Resource) o;
+        return Objects.equals(id, resource.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
