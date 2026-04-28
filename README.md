@@ -5,9 +5,10 @@ A professional, layered Java application for managing hardware and office resour
 ## 🚀 Key Features
 
 - **Comprehensive CRUD Operations**: Add, update, view, and delete resources with ease.
-- **Advanced Search**: Filter resources by name or allocated user using Java Streams.
+- **Advanced Search & Sorting**: Filter resources by name or allocated user using Java Streams, and naturally sort them via `Comparable`.
+- **Optimized Performance**: Leverages `HashMap` in the service layer for fast `O(1)` resource lookups.
 - **Persistent Storage**: Automated data persistence to `resources.txt` using custom serialization.
-- **Resource Tracking**: Manage resource types (Laptop, Monitor, etc.), allocation status, and maintenance history.
+- **Resource Tracking**: Manage diverse abstract resources (Digital and Furniture), allocation status, and robust exception handling.
 - **User-Friendly CLI**: Interactive menu-driven interface with formatted table outputs.
 
 ## 🛠️ Tech Stack
@@ -27,12 +28,14 @@ The project follows a **Layered Architecture** pattern to ensure maintainability
 ```mermaid
 graph TD
     A[ResourceCLI - Presentation Layer] --> B[ResourceService - Business Logic]
-    B --> C[ResourceStore - Data Access Layer]
+    B --> C[ResourceStore Singleton - Data Access Layer]
     B --> D[Models - Data Transfer Objects]
     C --> E[(resources.txt - Persistence)]
     
     subgraph Models
-        D1[Resource]
+        D1[Resource - Abstract]
+        D1 --> D3[DigitalResource]
+        D1 --> D4[FurnitureResource]
         D2[ResourceType/Status/AllocationType]
     end
 ```
@@ -45,11 +48,12 @@ graph TD
 
 ## 🧠 Core Concepts Applied
 
-- **Object-Oriented Programming (OOP)**: Heavy use of encapsulation, class relations, and state management.
+- **Object-Oriented Programming (OOP)**: Heavy use of encapsulation, inheritance (abstract classes & subclasses), and polymorphism.
+- **Design Patterns**: Implementation of the **Singleton Pattern** for `ResourceStore`.
+- **Collections & Streams API**: Utilization of `HashMap` for fast lookups, `Comparable` for natural sorting, and Streams for functional processing.
+- **Exception Handling**: Robust custom error handling for scenarios like resource not found.
 - **Layered Pattern**: Separation of concerns between UI, Logic, and Data.
 - **File Serialization**: Implementation of custom pipe-delimited (`|`) serialization for efficient data storage.
-- **Streams API**: Utilization of functional programming concepts for searching and processing collections.
-- **Singleton-like Behavior**: Managed lifecycle of services and stores within the CLI context.
 
 ## 📂 Project Structure
 
@@ -57,7 +61,9 @@ graph TD
 src/main/java/com/aayush/cli/
 ├── ResourceCLI.java (Main Entry)
 ├── models/
-│   ├── Resource.java
+│   ├── Resource.java (Abstract)
+│   ├── DigitalResource.java
+│   ├── FurnitureResource.java
 │   ├── ResourceType.java
 │   ├── ResourceStatus.java
 │   └── AllocationType.java
